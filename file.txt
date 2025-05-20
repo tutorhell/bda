@@ -1,0 +1,27 @@
+-- Load the input file from HDFS
+
+lines = LOAD '/user/hadoop/HDFS_File.txt' AS (line:chararray);
+
+
+
+-- Split each line into words
+
+words = FOREACH lines GENERATE FLATTEN(TOKENIZE(line)) AS word;
+
+
+
+-- Group the words
+
+grouped = GROUP words BY word;
+
+
+
+-- Count the number of occurrences for each word
+
+wordcount = FOREACH grouped GENERATE group AS word, COUNT(words) AS count;
+
+
+
+-- Display the result
+
+DUMP wordcount;
